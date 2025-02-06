@@ -3,19 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: #303234;
+  --color-text: #cfdef4;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-text);
+  background: var(--color-background);
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  .text-reg {
+    @apply text-[13px] leading-[1rem] font-normal tracking-[0.125em];
+  }
+  .text-button {
+    @apply text-sm leading-[1.25rem] font-medium tracking-[0.125em] uppercase;
+  }
 }

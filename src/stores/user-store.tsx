@@ -1,9 +1,15 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from "./root-store";
 
+interface User {
+  objectId: string;
+  name: string;
+  email: string;
+}
+
 export class UserStore {
   rootStore: RootStore;
-  user = null;
+  user?: User = undefined;
   isAuthenticated = false;
 
   constructor(rootStore: RootStore) {
@@ -17,7 +23,7 @@ export class UserStore {
   }
 
   logout() {
-    this.user = null;
+    this.user = undefined;
     this.isAuthenticated = false;
   }
 }
