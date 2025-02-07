@@ -68,7 +68,9 @@ const SignIn: FC = () => {
       !user.emailError &&
       !user.passwordError
     ) {
-      rootStore.userStore.setUser(user);
+      rootStore.userStore.checkIsNewUser(user.email)
+        ? rootStore.userStore.addUser(user)
+        : rootStore.userStore.setUser(user);
       router.push("/dashboard");
     }
   };

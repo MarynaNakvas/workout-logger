@@ -3,12 +3,13 @@
 import { FC, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { rootStore } from "@/stores/root-store";
+import Spinner from "@/components/spinner";
 
 const Home: FC = () => {
   const router = useRouter();
-  console.log("rootStore.userStore", rootStore.userStore);
 
   useEffect(() => {
+    rootStore.userStore.fetchUsers();
     if (rootStore.userStore.isAuthenticated) {
       router.push("/dashboard");
     } else {
@@ -16,7 +17,11 @@ const Home: FC = () => {
     }
   }, []);
 
-  return <div>Loading ...</div>;
+  return (
+    <div className="h-[90vh] flex items-center">
+      <Spinner isLoading={true} />
+    </div>
+  );
 };
 
 export default Home;
