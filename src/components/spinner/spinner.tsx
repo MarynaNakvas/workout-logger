@@ -20,5 +20,4 @@ const Spinner: FC<SpinnerProps> = ({ className, isLoading, children }) =>
     children
   );
 
-Spinner.displayName = "Spinner";
 export default Spinner;

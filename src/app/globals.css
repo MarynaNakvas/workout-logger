@@ -18,6 +18,6 @@ body {
     @apply text-[13px] leading-[1rem] font-normal tracking-[0.125em];
   }
   .text-button {
-    @apply text-sm leading-[1.25rem] font-medium tracking-[0.125em] uppercase;
+    @apply text-sm leading-[1.25rem] font-bold tracking-[0.125em] uppercase;
   }
 }

@@ -1,14 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { RootStore } from "./root-store";
+import { RootStore } from "../root-store";
+import { emailToName } from "@/utils/values";
+import { User } from "@/models";
 
 const apiUrl =
   "https://liberalmark-eu.backendless.app/api/209E82E3-2C42-4261-B6E6-6670F3414FB8/525F90F5-A7F0-44B5-A738-F8D7D8AAAF08/data/workoutUsers";
-
-interface User {
-  objectId: string;
-  name: string;
-  email: string;
-}
 
 export class UserStore {
   rootStore: RootStore;
@@ -40,8 +36,11 @@ export class UserStore {
     }
   }
 
-  async addUser(user: any) {
-    console.log("user", user);
+  async addUser(user: User) {
+    const updatedUserInfo = {
+      ...user,
+      name: user.name ? user.name : emailToName(user.email),
+    };
 
     try {
       const response = await fetch(apiUrl, {
@@ -49,7 +48,7 @@ export class UserStore {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(updatedUserInfo),
       });
       const data = await response.json();
       runInAction(() => {
@@ -66,10 +65,10 @@ export class UserStore {
     const currentUser = this.rootStore.userStore.users.find(
       (item) => item.email === email
     );
-    return !!currentUser?.objectId;
+    return !currentUser?.objectId;
   }
 
-  setUser(user: any) {
+  setUser(user: User) {
     this.user = user;
     this.isAuthenticated = true;
   }

@@ -14,6 +14,7 @@ export default {
         secondary: "#b1fcff",
         "button-dark": "#596a74",
         red: "#d81b60",
+        table: "#505254",
       },
     },
   },

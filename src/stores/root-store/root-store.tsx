@@ -1,5 +1,5 @@
-import { WorkoutStore } from "./workout-store";
-import { UserStore } from "./user-store";
+import { WorkoutStore } from "../workout-store";
+import { UserStore } from "../user-store";
 
 export class RootStore {
   workoutStore: WorkoutStore;

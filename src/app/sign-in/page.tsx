@@ -3,9 +3,11 @@
 import { FC, useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import Head from "next/head";
-import { rootStore } from "@/stores/root-store";
 import { useRouter } from "next/navigation";
+import { rootStore } from "@/stores/root-store";
 import { EMAIL_REGEXP } from "@/utils/validation";
+import { loginRequest } from "@/lib/msal/msal-config";
+import { User } from "@/models";
 
 interface FormInitialValues {
   email: string;
@@ -68,20 +70,37 @@ const SignIn: FC = () => {
       !user.emailError &&
       !user.passwordError
     ) {
-      rootStore.userStore.checkIsNewUser(user.email)
-        ? rootStore.userStore.addUser(user)
-        : rootStore.userStore.setUser(user);
+      const isNewUser = rootStore.userStore.checkIsNewUser(user.email);
+      const currentUser = {
+        email: user.email,
+        password: user.password,
+      } as User;
+      isNewUser
+        ? rootStore.userStore.addUser(currentUser)
+        : rootStore.userStore.setUser(currentUser);
       router.push("/dashboard");
     }
   };
 
   const handleSignInWithMicrosoft = () => {
-    instance.loginPopup();
+    instance.loginPopup(loginRequest).catch((e) => {
+      console.log(e);
+    });
   };
 
   useEffect(() => {
     if (accounts.length) {
-      rootStore.userStore.setUser(accounts[0]);
+      const isNewUser = rootStore.userStore.checkIsNewUser(
+        accounts[0].username
+      );
+      const currentUser = {
+        email: accounts[0].username,
+        name: accounts[0].name,
+      } as User;
+      isNewUser
+        ? rootStore.userStore.addUser(currentUser)
+        : rootStore.userStore.setUser(currentUser);
+
       router.push("/dashboard");
     }
   }, [accounts]);

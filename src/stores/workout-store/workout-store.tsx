@@ -1,13 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { RootStore } from "./root-store";
-
-interface Workout {
-  objectId: string;
-  userId: string;
-  dateWorkout: string;
-  distance: number;
-  duration: number;
-}
+import { Workout } from "@/models";
+import { RootStore } from "../root-store";
 
 const apiUrl =
   "https://liberalmark-eu.backendless.app/api/209E82E3-2C42-4261-B6E6-6670F3414FB8/525F90F5-A7F0-44B5-A738-F8D7D8AAAF08/data/workouts";
