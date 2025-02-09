@@ -13,5 +13,7 @@ export const calculatePace = (time: string, distance: number) => {
   const paceMin = Math.floor(paceMinutes);
   const paceSec = Math.round((paceMinutes - paceMin) * 60);
 
-  return `${paceMin}:${paceSec.toString().padStart(2, "0")}`;
+  return paceMin
+    ? `${paceMin}:${paceSec.toString().padStart(2, "0")}`
+    : undefined;
 };

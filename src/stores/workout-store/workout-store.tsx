@@ -32,4 +32,66 @@ export class WorkoutStore {
       });
     }
   }
+
+  async addWorkout(workout: Workout) {
+    this.error = "";
+    console.log("user", this.rootStore.userStore.user);
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...workout,
+          userId: this.rootStore.userStore.user?.objectId,
+        }),
+      });
+      if (response.ok) {
+        this.rootStore.workoutStore.fetchWorkouts();
+      }
+    } catch (error) {
+      runInAction(() => {
+        this.error = (error as Error).message;
+      });
+    }
+  }
+
+  async updateWorkout(workoutId: string, workout: Workout) {
+    this.error = "";
+
+    try {
+      const response = await fetch(`${apiUrl}/${workoutId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(workout),
+      });
+      if (response.ok) {
+        this.rootStore.workoutStore.fetchWorkouts();
+      }
+    } catch (error) {
+      runInAction(() => {
+        this.error = (error as Error).message;
+      });
+    }
+  }
+
+  async deleteWorkout(workoutId: string) {
+    this.error = "";
+    try {
+      const response = await fetch(`${apiUrl}/${workoutId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        this.rootStore.workoutStore.fetchWorkouts();
+      }
+    } catch (error) {
+      runInAction(() => {
+        this.error = (error as Error).message;
+      });
+    }
+  }
 }

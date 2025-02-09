@@ -7,9 +7,10 @@ export interface User {
 }
 
 export interface Workout {
-  objectId: string;
-  userId: string;
-  dateWorkout: string;
-  distance: number;
-  duration: string;
+  objectId?: string;
+  userId?: string;
+  dateWorkout?: string;
+  distance?: number;
+  duration?: string;
+  pace?: string;
 }

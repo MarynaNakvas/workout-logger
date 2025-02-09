@@ -90,16 +90,17 @@ const SignIn: FC = () => {
 
   useEffect(() => {
     if (accounts.length) {
-      const isNewUser = rootStore.userStore.checkIsNewUser(
-        accounts[0].username
-      );
+      // const isNewUser = rootStore.userStore.checkIsNewUser(
+      //   accounts[0].username
+      // );
       const currentUser = {
         email: accounts[0].username,
         name: accounts[0].name,
       } as User;
-      isNewUser
-        ? rootStore.userStore.addUser(currentUser)
-        : rootStore.userStore.setUser(currentUser);
+      rootStore.userStore.addUser(currentUser);
+      // isNewUser
+      //   ? rootStore.userStore.addUser(currentUser)
+      //   : rootStore.userStore.setUser(currentUser);
 
       router.push("/dashboard");
     }

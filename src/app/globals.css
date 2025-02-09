@@ -15,7 +15,7 @@ body {
 
 @layer base {
   .text-reg {
-    @apply text-[13px] leading-[1rem] font-normal tracking-[0.125em];
+    @apply text-[16px] leading-[1rem] font-normal tracking-[0.125em];
   }
   .text-button {
     @apply text-sm leading-[1.25rem] font-bold tracking-[0.125em] uppercase;
