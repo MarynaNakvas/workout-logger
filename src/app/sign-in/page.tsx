@@ -2,6 +2,7 @@
 
 import { FC, useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
+import { observer } from "mobx-react-lite";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { rootStore } from "@/stores/root-store";
@@ -16,7 +17,7 @@ interface FormInitialValues {
   passwordError: string | null;
 }
 
-const SignIn: FC = () => {
+const SignIn: FC = observer(() => {
   const { instance, accounts } = useMsal();
   const router = useRouter();
 
@@ -75,36 +76,46 @@ const SignIn: FC = () => {
         email: user.email,
         password: user.password,
       } as User;
-      isNewUser
+      !isNewUser
         ? rootStore.userStore.addUser(currentUser)
-        : rootStore.userStore.setUser(currentUser);
-      router.push("/dashboard");
+        : rootStore.userStore.setUser(isNewUser);
     }
   };
 
   const handleSignInWithMicrosoft = () => {
-    instance.loginPopup(loginRequest).catch((e) => {
-      console.log(e);
-    });
+    instance.loginPopup(loginRequest);
   };
 
   useEffect(() => {
     if (accounts.length) {
-      // const isNewUser = rootStore.userStore.checkIsNewUser(
-      //   accounts[0].username
-      // );
+      const storagedUser = localStorage.getItem("user");
+      const isNewUser = rootStore.userStore.checkIsNewUser(
+        accounts[0].username
+      );
+
       const currentUser = {
         email: accounts[0].username,
         name: accounts[0].name,
+        idToken: accounts[0].idToken,
       } as User;
-      rootStore.userStore.addUser(currentUser);
-      // isNewUser
-      //   ? rootStore.userStore.addUser(currentUser)
-      //   : rootStore.userStore.setUser(currentUser);
 
-      router.push("/dashboard");
+      !!storagedUser
+        ? rootStore.userStore.setUser(JSON.parse(storagedUser))
+        : !isNewUser
+          ? rootStore.userStore.addUser(currentUser)
+          : rootStore.userStore.setUser(isNewUser);
     }
   }, [accounts]);
+
+  useEffect(() => {
+    if (rootStore.userStore.isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [rootStore.userStore.isAuthenticated]);
+
+  useEffect(() => {
+    rootStore.userStore.loadUser();
+  }, []);
 
   return (
     <div className="min-h-screen bg-primary text-text flex items-center justify-center">
@@ -169,6 +180,6 @@ const SignIn: FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default SignIn;

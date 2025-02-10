@@ -1,18 +1,19 @@
 "use client";
 
 import { FC, useEffect } from "react";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { rootStore } from "@/stores/root-store";
 import Spinner from "@/components/spinner";
 
-const Home: FC = () => {
+const Home: FC = observer(() => {
   const router = useRouter();
 
   useEffect(() => {
-    rootStore.userStore.fetchUsers();
     if (rootStore.userStore.isAuthenticated) {
       router.push("/dashboard");
     } else {
+      rootStore.userStore.fetchUsers();
       router.push("/sign-in");
     }
   }, []);
@@ -22,6 +23,6 @@ const Home: FC = () => {
       <Spinner isLoading={true} />
     </div>
   );
-};
+});
 
 export default Home;

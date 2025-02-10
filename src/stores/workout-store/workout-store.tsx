@@ -9,6 +9,7 @@ export class WorkoutStore {
   rootStore: RootStore;
   workouts: Workout[] = [];
   isLoading: boolean = false;
+  userWorkouts: Workout[] = [];
   error: string = "";
 
   constructor(rootStore: RootStore) {
@@ -31,6 +32,14 @@ export class WorkoutStore {
         this.error = (error as Error).message;
       });
     }
+  }
+
+  getUserWorkouts(userId: string) {
+    runInAction(() => {
+      this.userWorkouts = this.rootStore.workoutStore.workouts.filter(
+        (item) => item.userId === userId
+      );
+    });
   }
 
   async addWorkout(workout: Workout) {
@@ -58,7 +67,7 @@ export class WorkoutStore {
     }
   }
 
-  async updateWorkout(workoutId: string, workout: Workout) {
+  async updateWorkout(workout: Workout, workoutId?: string) {
     this.error = "";
 
     try {

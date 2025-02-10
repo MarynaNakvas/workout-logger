@@ -12,12 +12,21 @@ import { Workout } from "@/models";
 const WorkoutList: FC = observer(() => {
   const [isConfirmModalShow, setIsConfirmModalShow] = useState<boolean>(false);
   const [isWorkoutModalShow, setIsWorkoutModalShow] = useState<boolean>(false);
-  const [workoutId, setWorkoutId] = useState<string | null>(null);
+  const [workoutId, setWorkoutId] = useState<string | undefined>(undefined);
   const [workout, setWorkout] = useState<Workout | undefined>(undefined);
+  const userId = rootStore.userStore.user?.objectId;
+  const workouts = rootStore.workoutStore.workouts;
+  const userWorkouts = rootStore.workoutStore.userWorkouts;
 
   useEffect(() => {
     rootStore.workoutStore.fetchWorkouts();
   }, []);
+
+  useEffect(() => {
+    if (workouts.length && userId) {
+      rootStore.workoutStore.getUserWorkouts(userId);
+    }
+  }, [workouts, userId]);
 
   return (
     <>
@@ -33,7 +42,7 @@ const WorkoutList: FC = observer(() => {
       <Spinner isLoading={rootStore.workoutStore.isLoading}>
         <div className="px-4">
           <h1 className="pb-4 text-2xl font-bold">Workouts</h1>
-          <ul className="bg-table rounded-2xl">
+          <div className="bg-table rounded-2xl">
             <div className="py-2 grid grid-cols-5 justify-items-center text-lg border-b-2 border-black">
               <span>Date</span>
               <span>Distance</span>
@@ -41,17 +50,23 @@ const WorkoutList: FC = observer(() => {
               <span>Pace</span>
               <span />
             </div>
-            {rootStore.workoutStore.workouts.map((item) => (
-              <WorkoutRow
-                key={item.objectId}
-                workout={item}
-                setIsConfirmModalShow={setIsConfirmModalShow}
-                setWorkoutId={setWorkoutId}
-                setIsWorkoutModalShow={setIsWorkoutModalShow}
-                setWorkout={setWorkout}
-              />
-            ))}
-          </ul>
+            {userWorkouts.length ? (
+              userWorkouts.map((item) => (
+                <WorkoutRow
+                  key={item.objectId}
+                  workout={item}
+                  setIsConfirmModalShow={setIsConfirmModalShow}
+                  setWorkoutId={setWorkoutId}
+                  setIsWorkoutModalShow={setIsWorkoutModalShow}
+                  setWorkout={setWorkout}
+                />
+              ))
+            ) : (
+              <div className="px-4 py-16 flex items-center justify-center">
+                <span className="text-lg">There are no items for now</span>
+              </div>
+            )}
+          </div>
         </div>
       </Spinner>
 

@@ -1,17 +1,33 @@
 "use client";
 
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import Image from "next/image";
-import { get } from "lodash";
+import { observer } from "mobx-react-lite";
 import { rootStore } from "@/stores/root-store";
 import SignOutButton from "./sign-out-button";
+import {
+  getBestPace,
+  getLongestDistance,
+  getTotalDistance,
+} from "@/utils/values";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
-const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
-  const userName = get(rootStore.userStore.user, "name");
+const DashboardLayout: FC<DashboardLayoutProps> = observer(({ children }) => {
+  const userWorkouts = rootStore.workoutStore.userWorkouts;
+  const { totalDistance, longestDistance, bestPace } = useMemo(() => {
+    const totalDistance = getTotalDistance(userWorkouts);
+    const longestDistance = getLongestDistance(userWorkouts);
+    const bestPace = getBestPace(userWorkouts);
+
+    return {
+      totalDistance: Math.round(totalDistance * 100) / 100 || 0,
+      longestDistance,
+      bestPace,
+    };
+  }, [userWorkouts]);
 
   return (
     <>
@@ -27,7 +43,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
             width={150}
             height={150}
           />
-          <div className="text-xl">{userName}</div>
+          <div className="text-xl">{rootStore.userStore.user?.name}</div>
         </div>
 
         <div className="grow">
@@ -35,17 +51,17 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
             <div className="mb-4">
               <div className="text-2xl tracking-[1.25px]">Total distance</div>
               <div className="text-[27px] tracking-[1.25px] font-bold">
-                1000 km
+                {`${totalDistance} km`}
               </div>
             </div>
             <div className="mb-4 flex gap-6">
               <div className="text-2xl tracking-[1.25px]">
                 <div>Best pace</div>
-                <div>5:45</div>
+                <div>{bestPace}</div>
               </div>
               <div className="text-2xl tracking-[1.25px]">
                 <div>Longest run</div>
-                <div>14.5 km</div>
+                <div>{`${longestDistance} km`}</div>
               </div>
             </div>
           </div>
@@ -55,6 +71,6 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
       {children}
     </>
   );
-};
+});
 
 export default DashboardLayout;

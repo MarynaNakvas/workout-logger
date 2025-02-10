@@ -1,5 +1,4 @@
-import { FC, ReactNode } from "react";
-
+import { FC, memo, ReactNode } from "react";
 import classNames from "classnames";
 
 interface SpinnerProps {
@@ -8,7 +7,7 @@ interface SpinnerProps {
   children?: ReactNode;
 }
 
-const Spinner: FC<SpinnerProps> = ({ className, isLoading, children }) =>
+const Spinner: FC<SpinnerProps> = memo(({ className, isLoading, children }) =>
   isLoading ? (
     <div
       className={classNames(
@@ -18,6 +17,7 @@ const Spinner: FC<SpinnerProps> = ({ className, isLoading, children }) =>
     />
   ) : (
     children
-  );
+  )
+);
 
 export default Spinner;

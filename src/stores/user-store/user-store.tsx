@@ -11,11 +11,12 @@ export class UserStore {
   isUsersFetching: boolean = false;
   users: User[] = [];
   user?: User = undefined;
-  isAuthenticated: boolean = false;
+  isAuthenticated?: boolean = undefined;
   error?: string = undefined;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+    this.loadUser();
     makeAutoObservable(this);
   }
 
@@ -62,19 +63,35 @@ export class UserStore {
   }
 
   checkIsNewUser(email: string) {
-    const currentUser = this.rootStore.userStore.users.find(
-      (item) => item.email === email
-    );
-    return !currentUser?.objectId;
+    return this.rootStore.userStore.users.find((item) => item.email === email);
   }
 
   setUser(user: User) {
-    this.user = user;
-    this.isAuthenticated = true;
+    runInAction(() => {
+      this.user = user;
+      this.isAuthenticated = true;
+    });
+
+    localStorage.setItem("user", JSON.stringify(user));
+  }
+
+  loadUser() {
+    if (typeof window !== "undefined") {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        runInAction(() => {
+          this.user = JSON.parse(savedUser);
+          this.isAuthenticated = true;
+        });
+      }
+    }
   }
 
   logout() {
-    this.user = undefined;
-    this.isAuthenticated = false;
+    runInAction(() => {
+      this.user = undefined;
+      this.isAuthenticated = undefined;
+    });
+    localStorage.removeItem("user");
   }
 }
