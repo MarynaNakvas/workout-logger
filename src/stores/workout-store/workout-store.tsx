@@ -44,7 +44,6 @@ export class WorkoutStore {
 
   async addWorkout(workout: Workout) {
     this.error = "";
-    console.log("user", this.rootStore.userStore.user);
 
     try {
       const response = await fetch(apiUrl, {
@@ -59,6 +58,7 @@ export class WorkoutStore {
       });
       if (response.ok) {
         this.rootStore.workoutStore.fetchWorkouts();
+        this.rootStore.workoutStore.addWorkoutToCalendar();
       }
     } catch (error) {
       runInAction(() => {
@@ -102,5 +102,37 @@ export class WorkoutStore {
         this.error = (error as Error).message;
       });
     }
+  }
+
+  async addWorkoutToCalendar(workout?: Workout) {
+    const event = {
+      subject: "Running practice",
+      start: {
+        dateTime: "2025-02-13T12:30:00",
+        timeZone: "Europe/Warsaw",
+      },
+      end: {
+        dateTime: "2025-02-13T13:10:00",
+        timeZone: "Europe/Warsaw",
+      },
+      body: {
+        contentType: "HTML",
+        content: `Type: Easy run<br>Description: Keep your pace easy and your intensity low`,
+      },
+      reminderMinutesBeforeStart: 15,
+    };
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("accessToken", accessToken);
+    console.log("accessToken 22", this.rootStore.userStore.accessToken);
+    const response = await fetch("https://graph.microsoft.com/v1.0/me/events", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${JSON.parse(accessToken || "")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(event),
+    });
+
+    return response.json();
   }
 }

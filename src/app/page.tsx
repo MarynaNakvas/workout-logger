@@ -13,7 +13,6 @@ const Home: FC = observer(() => {
     if (rootStore.userStore.isAuthenticated) {
       router.push("/dashboard");
     } else {
-      rootStore.userStore.fetchUsers();
       router.push("/sign-in");
     }
   }, []);

@@ -2,44 +2,50 @@ import { LogLevel } from "@azure/msal-browser";
 
 export const msalConfig = {
   auth: {
-    clientId: "4385ba6b-4056-4836-b499-93aa84911442",
-    authority:
-      "https://login.microsoftonline.com/53021d58-107c-4859-ac7e-73eec690b4ff",
+    clientId: "8c1d7425-37fe-4e0e-b19e-7557e4df414e",
+    authority: "https://login.microsoftonline.com/common",
     redirectUri: "http://localhost:3000/",
   },
   cache: {
     cacheLocation: "sessionStorage",
     storeAuthStateInCookie: false,
   },
-  // system: {
-  //   loggerOptions: {
-  //     loggerCallback: (level: any, message: any, containsPii: any) => {
-  //       if (containsPii) {
-  //         return;
-  //       }
-  //       switch (level) {
-  //         case LogLevel.Error:
-  //           console.error(message);
-  //           return;
-  //         case LogLevel.Info:
-  //           console.info(message);
-  //           return;
-  //         case LogLevel.Verbose:
-  //           console.debug(message);
-  //           return;
-  //         case LogLevel.Warning:
-  //           console.warn(message);
-  //           return;
-  //         default:
-  //           return;
-  //       }
-  //     },
-  //   },
-  // },
+  system: {
+    loggerOptions: {
+      loggerCallback: (level: any, message: any, containsPii: any) => {
+        if (containsPii) {
+          return;
+        }
+        switch (level) {
+          case LogLevel.Error:
+            console.error(message);
+            return;
+          case LogLevel.Info:
+            console.info(message);
+            return;
+          case LogLevel.Verbose:
+            console.debug(message);
+            return;
+          case LogLevel.Warning:
+            console.warn(message);
+            return;
+          default:
+            return;
+        }
+      },
+    },
+  },
 };
 
 export const loginRequest = {
-  scopes: ["User.Read"],
+  scopes: [
+    "User.Read",
+    "Calendars.ReadWrite",
+    "email",
+    "profile",
+    "ProfilePhoto.Read.All",
+    "ProfilePhoto.ReadWrite.All",
+  ],
 };
 
 export const graphConfig = {

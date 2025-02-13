@@ -1,4 +1,5 @@
 import { Workout } from "@/models";
+import { isEqual, omitBy } from "lodash";
 
 export const emailToName = (email: string) => {
   const nameParts = email.split("@")[0].split(".");
@@ -45,3 +46,6 @@ export const getBestPace = (workouts: Workout[]) =>
         : best;
     }
   }, "0:00");
+
+export const getObjectDifferences = (obj1: Workout, obj2: Workout) =>
+  omitBy(obj2, (value, key) => isEqual(value, obj1[key as keyof Workout]));

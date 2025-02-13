@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { rootStore } from "@/stores/root-store";
 import { Workout } from "@/models";
-import { calculatePace } from "@/utils/values";
+import { calculatePace, getObjectDifferences } from "@/utils/values";
 
 const initialValues: Workout = {
   dateWorkout: undefined,
@@ -20,7 +20,14 @@ interface WorkoutModalProps {
 
 const WorkoutModal: FC<WorkoutModalProps> = observer(
   ({ setIsWorkoutModalShow, workout }) => {
-    const [newWorkout, setNewWorkout] = useState(workout || initialValues);
+    const date =
+      workout && workout.dateWorkout
+        ? new Date(workout.dateWorkout).toISOString().split("T")[0]
+        : new Date().toISOString();
+    const workoutInitialValues = workout
+      ? { ...workout, dateWorkout: date }
+      : initialValues;
+    const [newWorkout, setNewWorkout] = useState(workoutInitialValues);
 
     const handleChangeValue = useCallback(
       (key: string, value: string) => {
@@ -33,12 +40,14 @@ const WorkoutModal: FC<WorkoutModalProps> = observer(
     );
 
     const onAccept = useCallback(() => {
-      if (workout) {
-        rootStore.workoutStore.updateWorkout(newWorkout);
-        setIsWorkoutModalShow(false);
-      }
-      if (newWorkout) {
+      if (newWorkout && !workout) {
         rootStore.workoutStore.addWorkout(newWorkout);
+        setIsWorkoutModalShow(false);
+      } else if (workout) {
+        rootStore.workoutStore.updateWorkout(
+          getObjectDifferences(workout, newWorkout),
+          workout.objectId
+        );
         setIsWorkoutModalShow(false);
       }
     }, [workout, newWorkout]);

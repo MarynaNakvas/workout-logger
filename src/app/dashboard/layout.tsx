@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, ReactNode, useMemo } from "react";
+import { FC, ReactNode, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import { rootStore } from "@/stores/root-store";
@@ -16,6 +16,7 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: FC<DashboardLayoutProps> = observer(({ children }) => {
+  const accessToken = rootStore.userStore.accessToken;
   const userWorkouts = rootStore.workoutStore.userWorkouts;
   const { totalDistance, longestDistance, bestPace } = useMemo(() => {
     const totalDistance = getTotalDistance(userWorkouts);
@@ -29,6 +30,12 @@ const DashboardLayout: FC<DashboardLayoutProps> = observer(({ children }) => {
     };
   }, [userWorkouts]);
 
+  useEffect(() => {
+    if (accessToken) {
+      rootStore.userStore.getUserPhoto();
+    }
+  }, [accessToken]);
+
   return (
     <>
       <h2 className="px-4 py-8 text-3xl font-bold text-center tracking-[1.25px]">
@@ -38,7 +45,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = observer(({ children }) => {
         <div className="flex flex-col items-center gap-5">
           <Image
             className="rounded-full"
-            src="/photo.png"
+            src={rootStore.userStore.userPhoto || "/avatar.png"}
             alt="User photo"
             width={150}
             height={150}

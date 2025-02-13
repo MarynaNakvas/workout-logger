@@ -9,18 +9,19 @@ const SignOutButton = observer(() => {
   const { instance } = useMsal();
   const router = useRouter();
 
-  const isMicrosoftUser = !!rootStore.userStore.user?.idToken;
+  const isMicrosoftUser = !!rootStore.userStore.accessToken;
 
   const handleLogout = () => {
     if (isMicrosoftUser) {
       instance.logoutPopup({
-        postLogoutRedirectUri: "/",
+        postLogoutRedirectUri: "/sign-in",
         mainWindowRedirectUri: "/",
       });
       localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
     } else {
       rootStore.userStore.logout();
-      router.push("/");
+      router.push("/sign-in");
     }
   };
 

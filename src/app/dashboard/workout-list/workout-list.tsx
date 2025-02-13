@@ -33,7 +33,10 @@ const WorkoutList: FC = observer(() => {
       <div className="px-8 py-8">
         <button
           className="w-full py-3 text-button text-xl text-primary bg-secondary rounded-full"
-          onClick={() => setIsWorkoutModalShow(true)}
+          onClick={() => {
+            setWorkout(undefined);
+            setIsWorkoutModalShow(true);
+          }}
         >
           Add Run
         </button>
@@ -42,7 +45,7 @@ const WorkoutList: FC = observer(() => {
       <Spinner isLoading={rootStore.workoutStore.isLoading}>
         <div className="px-4">
           <h1 className="pb-4 text-2xl font-bold">Workouts</h1>
-          <div className="bg-table rounded-2xl">
+          <div className="mb-8 bg-table rounded-2xl">
             <div className="py-2 grid grid-cols-5 justify-items-center text-lg border-b-2 border-black">
               <span>Date</span>
               <span>Distance</span>
