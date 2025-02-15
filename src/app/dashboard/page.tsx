@@ -13,7 +13,10 @@ const Dashboard: FC = observer(() => {
   const [isWorkoutModalShow, setIsWorkoutModalShow] = useState<boolean>(false);
   const [workoutId, setWorkoutId] = useState<string | undefined>(undefined);
   const [workout, setWorkout] = useState<Workout | undefined>(undefined);
-  localStorage.removeItem("account");
+
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("account");
+  }
 
   return (
     <>
