@@ -2,8 +2,9 @@
 
 import { useMsal } from "@azure/msal-react";
 import { observer } from "mobx-react-lite";
-import { useRootStore } from "@/hooks/useStore";
 import { useRouter } from "next/navigation";
+
+import { useRootStore } from "@/hooks/useStore";
 
 const SignOutButton = observer(() => {
   const { instance } = useMsal();

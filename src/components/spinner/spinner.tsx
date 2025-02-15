@@ -1,5 +1,5 @@
-import { FC, memo, ReactNode } from "react";
 import classNames from "classnames";
+import { FC, memo, ReactNode } from "react";
 
 interface SpinnerProps {
   className?: string;
@@ -20,4 +20,5 @@ const Spinner: FC<SpinnerProps> = memo(({ className, isLoading, children }) =>
   )
 );
 
+Spinner.displayName = "Spinner";
 export default Spinner;

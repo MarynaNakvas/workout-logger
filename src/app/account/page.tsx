@@ -1,12 +1,13 @@
 "use client";
 
-import { FC, useEffect } from "react";
 import { useMsal } from "@azure/msal-react";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
-import { User } from "@/models";
+import { FC, useEffect } from "react";
+
 import Spinner from "@/components/spinner";
 import { useRootStore } from "@/hooks/useStore";
+import { User } from "@/models";
 
 const Account: FC = observer(() => {
   const { instance, accounts } = useMsal();

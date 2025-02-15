@@ -1,5 +1,6 @@
-import { RootContext } from "@/app/layout";
 import { useContext } from "react";
+
+import { RootContext } from "@/stores/root-provider";
 
 export const useRootStore = () => {
   const context = useContext(RootContext);

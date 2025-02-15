@@ -1,7 +1,8 @@
 "use client";
 
-import { FC, useCallback } from "react";
 import { observer } from "mobx-react-lite";
+import { FC, useCallback } from "react";
+
 import { useRootStore } from "@/hooks/useStore";
 
 interface ConfirmModalProps {

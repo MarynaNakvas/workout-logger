@@ -1,15 +1,17 @@
 "use client";
 
-import { FC, ReactNode, useEffect, useMemo } from "react";
-import Image from "next/image";
 import { observer } from "mobx-react-lite";
-import SignOutButton from "./sign-out-button";
+import Image from "next/image";
+import { FC, ReactNode, useEffect, useMemo } from "react";
+
+import { useRootStore } from "@/hooks/useStore";
 import {
   getBestPace,
   getLongestDistance,
   getTotalDistance,
 } from "@/utils/values";
-import { useRootStore } from "@/hooks/useStore";
+
+import SignOutButton from "./sign-out-button";
 
 interface DashboardLayoutProps {
   children: ReactNode;

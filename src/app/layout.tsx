@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, FC, ReactNode } from "react";
 import { Roboto } from "next/font/google";
+import { FC, ReactNode } from "react";
+
 import AuthProvider from "@/lib/msal/auth-config";
-import { RootStore, rootStore } from "@/stores/root-store";
+import { RootProvider } from "@/stores/root-provider";
 
 import "./globals.css";
 
@@ -16,15 +17,11 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-export const RootContext = createContext<RootStore | null>(null);
-
 const RootLayout: FC<RootLayoutProps> = ({ children }) => (
   <html lang="en">
     <body className={roboto.className}>
       <AuthProvider>
-        <RootContext.Provider value={rootStore}>
-          {children}
-        </RootContext.Provider>
+        <RootProvider>{children}</RootProvider>
       </AuthProvider>
     </body>
   </html>
