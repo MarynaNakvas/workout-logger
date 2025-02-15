@@ -1,14 +1,15 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
-import { EMAIL_REGEXP } from "@/utils/validation";
-import { loginRequest } from "@/lib/msal/msal-config";
-import { User } from "@/models";
+import { FC, useEffect, useState } from "react";
+
 import Spinner from "@/components/spinner";
 import { useRootStore } from "@/hooks/useStore";
+import { loginRequest } from "@/lib/msal/msal-config";
+import { User } from "@/models";
+import { EMAIL_REGEXP } from "@/utils/validation";
 
 interface FormInitialValues {
   email: string;
@@ -31,7 +32,7 @@ const SignIn: FC = observer(() => {
 
   const [user, setUser] = useState(initialState);
 
-  const handleChangeEmail = (email: any) => {
+  const handleChangeEmail = (email: string) => {
     setUser((prevValue) => ({ ...prevValue, email }));
     if (email) {
       setUser((prevValue) => ({
@@ -41,7 +42,7 @@ const SignIn: FC = observer(() => {
     }
   };
 
-  const handleChangePassword = (password: any) => {
+  const handleChangePassword = (password: string) => {
     setUser((prevValue) => ({ ...prevValue, password }));
     if (password) {
       setUser((prevValue) => ({

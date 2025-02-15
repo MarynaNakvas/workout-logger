@@ -1,8 +1,9 @@
 "use client";
 
-import { FC, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
+import { FC, useEffect } from "react";
+
 import Spinner from "@/components/spinner";
 import { useRootStore } from "@/hooks/useStore";
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { FC, ReactNode } from "react";
 import { Roboto } from "next/font/google";
+import { FC, ReactNode } from "react";
+
 import AuthProvider from "@/lib/msal/auth-config";
 import { RootProvider } from "@/stores/root-provider";
 

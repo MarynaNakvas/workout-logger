@@ -1,9 +1,11 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { RootStore } from "../root-store";
-import { emailToName } from "@/utils/values";
-import { User } from "@/models";
-import { loginRequest } from "@/lib/msal/msal-config";
 import { AccountInfo, IPublicClientApplication } from "@azure/msal-browser";
+import { makeAutoObservable, runInAction } from "mobx";
+
+import { loginRequest } from "@/lib/msal/msal-config";
+import { User } from "@/models";
+import { emailToName } from "@/utils/values";
+
+import { RootStore } from "../root-store";
 
 const apiUrl =
   "https://liberalmark-eu.backendless.app/api/209E82E3-2C42-4261-B6E6-6670F3414FB8/525F90F5-A7F0-44B5-A738-F8D7D8AAAF08/data/workoutUsers";

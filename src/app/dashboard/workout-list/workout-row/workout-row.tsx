@@ -1,9 +1,10 @@
 "use client";
 
-import { FC, memo } from "react";
 import Image from "next/image";
-import { calculatePace } from "@/utils/values";
+import { FC, memo } from "react";
+
 import { Workout } from "@/models";
+import { calculatePace } from "@/utils/values";
 
 interface WorkoutRowProps {
   workout: Workout;
@@ -70,4 +71,5 @@ const WorkoutRow: FC<WorkoutRowProps> = memo(
   }
 );
 
+WorkoutRow.displayName = "WorkoutRow";
 export default WorkoutRow;

@@ -1,12 +1,13 @@
 "use client";
 
-import { FC, useState } from "react";
 import { observer } from "mobx-react-lite";
+import { FC, useState } from "react";
 
-import WorkoutList from "./workout-list";
-import { Workout } from "@/models";
 import ConfirmModal from "@/components/confirm-action-modal";
 import WorkoutModal from "@/components/workout-modal";
+import { Workout } from "@/models";
+
+import WorkoutList from "./workout-list";
 
 const Dashboard: FC = observer(() => {
   const [isConfirmModalShow, setIsConfirmModalShow] = useState<boolean>(false);

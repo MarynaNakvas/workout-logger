@@ -1,5 +1,6 @@
-import { Workout } from "@/models";
 import { isEqual, omitBy } from "lodash";
+
+import { Workout } from "@/models";
 
 export const emailToName = (email: string) => {
   const nameParts = email.split("@")[0].split(".");

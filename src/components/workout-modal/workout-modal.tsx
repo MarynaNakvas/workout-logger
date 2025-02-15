@@ -1,7 +1,8 @@
 "use client";
 
-import { FC, useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
+import { FC, useCallback, useEffect, useState } from "react";
+
 import { useRootStore } from "@/hooks/useStore";
 import { Workout } from "@/models";
 import { calculatePace, getObjectDifferences } from "@/utils/values";
