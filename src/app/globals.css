@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #303234;
+  --color-text: #cfdef4;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-background);
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  .text-reg {
+    @apply text-[16px] leading-[1rem] font-normal tracking-[0.125em];
+  }
+  .text-button {
+    @apply text-sm leading-[1.25rem] font-bold tracking-[0.125em] uppercase;
+  }
+}
