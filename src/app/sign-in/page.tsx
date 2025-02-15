@@ -3,14 +3,12 @@
 import { FC, useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { observer } from "mobx-react-lite";
-import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { rootStore } from "@/stores/root-store";
 import { EMAIL_REGEXP } from "@/utils/validation";
 import { loginRequest } from "@/lib/msal/msal-config";
 import { User } from "@/models";
 import Spinner from "@/components/spinner";
-import { callMsGraph } from "@/lib/msal/graph";
+import { useRootStore } from "@/hooks/useStore";
 
 interface FormInitialValues {
   email: string;
@@ -19,18 +17,19 @@ interface FormInitialValues {
   passwordError: string | null;
 }
 
-const SignIn: FC = observer(() => {
-  const { instance, accounts } = useMsal();
-  const router = useRouter();
+const initialState: FormInitialValues = {
+  email: "",
+  password: "",
+  emailError: null,
+  passwordError: null,
+};
 
-  const initialState: FormInitialValues = {
-    email: "",
-    password: "",
-    emailError: null,
-    passwordError: null,
-  };
+const SignIn: FC = observer(() => {
+  const { instance } = useMsal();
+  const router = useRouter();
+  const { userStore } = useRootStore();
+
   const [user, setUser] = useState(initialState);
-  const [isMicrosoft, setIsMicrosoft] = useState(false);
 
   const handleChangeEmail = (email: any) => {
     setUser((prevValue) => ({ ...prevValue, email }));
@@ -74,71 +73,47 @@ const SignIn: FC = observer(() => {
       !user.emailError &&
       !user.passwordError
     ) {
-      const isNewUser = rootStore.userStore.checkIsNewUser(user.email);
+      const isNewUser = userStore.checkIsNewUser(user.email);
       const currentUser = {
         email: user.email,
         password: user.password,
       } as User;
       !isNewUser
-        ? rootStore.userStore.addUser(currentUser)
-        : rootStore.userStore.setUser(isNewUser);
+        ? userStore.addUser(currentUser)
+        : userStore.setUser(isNewUser);
     }
   };
 
   const handleSignInWithMicrosoft = () => {
-    setIsMicrosoft(true);
     instance.loginRedirect(loginRequest);
+    localStorage.setItem("account", "true");
   };
 
-  const fetchToken = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      await rootStore.userStore.getAccessToken(instance, accounts[0]);
-    }
-  };
+  const account = localStorage.getItem("account");
 
   useEffect(() => {
-    if (accounts.length > 0) {
-      fetchToken();
-      const storagedUser = localStorage.getItem("user");
-      const userData = rootStore.userStore.checkIsNewUser(accounts[0].username);
-
-      const currentUser = {
-        email: accounts[0].username,
-        name: accounts[0].name,
-      } as User;
-
-      !!storagedUser
-        ? rootStore.userStore.setUser(JSON.parse(storagedUser))
-        : !userData
-          ? rootStore.userStore.addUser(currentUser)
-          : rootStore.userStore.setUser(userData);
-    }
-  }, [accounts]);
-
-  useEffect(() => {
-    if (rootStore.userStore.isAuthenticated) {
-      setIsMicrosoft(false);
+    if (userStore.accessToken) {
       router.push("/dashboard");
     }
-  }, [rootStore.userStore.isAuthenticated]);
+  }, [userStore.accessToken]);
 
   useEffect(() => {
-    rootStore.userStore.fetchUsers();
-    rootStore.userStore.loadUser();
+    if (!!account) {
+      router.push("/account");
+    }
+  }, [account]);
+
+  useEffect(() => {
+    userStore.fetchUsers();
+    userStore.loadUser();
   }, []);
 
   return (
-    <div className="min-h-screen bg-primary text-text flex items-center justify-center">
-      <Head>
-        <title>Workout Logger - Login</title>
-        <meta name="description" content="Login to Workout Logger" />
-      </Head>
+    <div className="h-screen bg-primary text-text flex items-center justify-center">
+      <Spinner isLoading={!!account && !userStore.accessToken}>
+        <div className="w-full min-h-screen p-8 bg-gray-800 rounded-xl shadow-md">
+          <h2 className="text-3xl font-bold text-center">Workout Logger</h2>
 
-      <div className="w-full min-h-screen p-8 bg-gray-800 rounded-xl shadow-md">
-        <h2 className="text-3xl font-bold text-center">Workout Logger</h2>
-
-        <Spinner className="mt-[70%]" isLoading={isMicrosoft}>
           <form className="flex flex-col gap-5 mt-52">
             <div>
               <label htmlFor="email" className="block text-reg">
@@ -189,8 +164,8 @@ const SignIn: FC = observer(() => {
               Sign in with Microsoft
             </button>
           </div>
-        </Spinner>
-      </div>
+        </div>
+      </Spinner>
     </div>
   );
 });

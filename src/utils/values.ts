@@ -49,3 +49,12 @@ export const getBestPace = (workouts: Workout[]) =>
 
 export const getObjectDifferences = (obj1: Workout, obj2: Workout) =>
   omitBy(obj2, (value, key) => isEqual(value, obj1[key as keyof Workout]));
+
+export const getEndWorkout = (start: string | Date, duration: string) => {
+  const startDate = new Date(start);
+  const [hours, minutes] = duration.split(":").map(Number);
+  startDate.setHours(startDate.getHours() + hours);
+  startDate.setMinutes(startDate.getMinutes() + minutes);
+
+  return startDate.toISOString().slice(0, 19);
+};

@@ -9,7 +9,9 @@ export interface User {
 export interface Workout {
   objectId?: string;
   userId?: string;
+  typeWorkout?: string;
   dateWorkout?: string;
+  timeWorkout?: string;
   distance?: number;
   duration?: string;
   pace?: string;

@@ -1,58 +1,55 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { rootStore } from "@/stores/root-store";
 import Spinner from "@/components/spinner";
-import WorkoutRow from "./workout-row";
-import ConfirmModal from "@/components/confirm-action-modal";
-import WorkoutModal from "@/components/workout-modal";
 import { Workout } from "@/models";
+import { useRootStore } from "@/hooks/useStore";
 
-const WorkoutList: FC = observer(() => {
-  const [isConfirmModalShow, setIsConfirmModalShow] = useState<boolean>(false);
-  const [isWorkoutModalShow, setIsWorkoutModalShow] = useState<boolean>(false);
-  const [workoutId, setWorkoutId] = useState<string | undefined>(undefined);
-  const [workout, setWorkout] = useState<Workout | undefined>(undefined);
-  const userId = rootStore.userStore.user?.objectId;
-  const workouts = rootStore.workoutStore.workouts;
-  const userWorkouts = rootStore.workoutStore.userWorkouts;
+import WorkoutRow from "./workout-row";
 
-  useEffect(() => {
-    rootStore.workoutStore.fetchWorkouts();
-  }, []);
+interface WorkoutListProps {
+  setIsConfirmModalShow: (prop: boolean) => void;
+  setWorkoutId: (prop?: string) => void;
+  setIsWorkoutModalShow: (prop: boolean) => void;
+  setWorkout: (prop: Workout) => void;
+}
 
-  useEffect(() => {
-    if (workouts.length && userId) {
-      rootStore.workoutStore.getUserWorkouts(userId);
-    }
-  }, [workouts, userId]);
+const WorkoutList: FC<WorkoutListProps> = observer(
+  ({
+    setIsConfirmModalShow,
+    setWorkoutId,
+    setIsWorkoutModalShow,
+    setWorkout,
+  }) => {
+    const { userStore, workoutStore } = useRootStore();
+    const userId = userStore.user?.objectId;
+    const workouts = workoutStore.workouts;
+    const userWorkouts = workoutStore.userWorkouts;
 
-  return (
-    <>
-      <div className="px-8 py-8">
-        <button
-          className="w-full py-3 text-button text-xl text-primary bg-secondary rounded-full"
-          onClick={() => {
-            setWorkout(undefined);
-            setIsWorkoutModalShow(true);
-          }}
-        >
-          Add Run
-        </button>
-      </div>
+    useEffect(() => {
+      workoutStore.fetchWorkouts();
+    }, []);
 
-      <Spinner isLoading={rootStore.workoutStore.isLoading}>
+    useEffect(() => {
+      if (workouts.length && userId) {
+        workoutStore.getUserWorkouts(userId);
+      }
+    }, [workouts, userId]);
+
+    return (
+      <Spinner isLoading={workoutStore.isLoading}>
         <div className="px-4">
           <h1 className="pb-4 text-2xl font-bold">Workouts</h1>
           <div className="mb-8 bg-table rounded-2xl">
-            <div className="py-2 grid grid-cols-5 justify-items-center text-lg border-b-2 border-black">
+            <div className="py-2 grid grid-cols-table justify-items-center text-base border-b-2 border-black">
               <span>Date</span>
               <span>Distance</span>
               <span>Time</span>
               <span>Pace</span>
               <span />
             </div>
+
             {userWorkouts.length ? (
               userWorkouts.map((item) => (
                 <WorkoutRow
@@ -72,22 +69,8 @@ const WorkoutList: FC = observer(() => {
           </div>
         </div>
       </Spinner>
-
-      {isConfirmModalShow && (
-        <ConfirmModal
-          setIsConfirmModalShow={setIsConfirmModalShow}
-          workoutId={workoutId}
-        />
-      )}
-
-      {isWorkoutModalShow && (
-        <WorkoutModal
-          setIsWorkoutModalShow={setIsWorkoutModalShow}
-          workout={workout}
-        />
-      )}
-    </>
-  );
-});
+    );
+  }
+);
 
 export default WorkoutList;

@@ -2,26 +2,28 @@
 
 import { useMsal } from "@azure/msal-react";
 import { observer } from "mobx-react-lite";
-import { rootStore } from "@/stores/root-store";
+import { useRootStore } from "@/hooks/useStore";
 import { useRouter } from "next/navigation";
 
 const SignOutButton = observer(() => {
   const { instance } = useMsal();
   const router = useRouter();
+  const { userStore } = useRootStore();
 
-  const isMicrosoftUser = !!rootStore.userStore.accessToken;
+  const isMicrosoftUser = !!userStore.accessToken;
 
   const handleLogout = () => {
     if (isMicrosoftUser) {
       instance.logoutPopup({
-        postLogoutRedirectUri: "/sign-in",
+        postLogoutRedirectUri: "/",
         mainWindowRedirectUri: "/",
       });
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("account");
     } else {
-      rootStore.userStore.logout();
-      router.push("/sign-in");
+      userStore.logout();
+      router.push("/");
     }
   };
 

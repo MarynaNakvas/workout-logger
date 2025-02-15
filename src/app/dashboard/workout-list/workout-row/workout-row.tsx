@@ -26,7 +26,7 @@ const WorkoutRow: FC<WorkoutRowProps> = memo(
       : null;
 
     return (
-      <div className="py-4 grid grid-cols-5 justify-items-center border-b-2 border-black last:border-none">
+      <div className="py-4 grid grid-cols-table justify-items-center border-b-2 border-black last:border-none">
         <span>{date}</span>
         <span>{workout.distance}</span>
         <span>{workout.duration}</span>
@@ -35,7 +35,7 @@ const WorkoutRow: FC<WorkoutRowProps> = memo(
             !!workout.distance &&
             calculatePace(workout.duration, workout.distance)}
         </span>
-        <div className="flex gap-4">
+        <div className="flex gap-2">
           <button
             onClick={() => {
               setIsWorkoutModalShow(true);

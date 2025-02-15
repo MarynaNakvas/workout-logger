@@ -20,9 +20,9 @@ export class UserStore {
   error?: string = undefined;
 
   constructor(rootStore: RootStore) {
+    makeAutoObservable(this);
     this.rootStore = rootStore;
     this.loadUser();
-    makeAutoObservable(this);
   }
 
   async fetchUsers() {
@@ -54,12 +54,26 @@ export class UserStore {
       runInAction(() => {
         this.accessToken = response.accessToken;
       });
+
       localStorage.setItem("accessToken", JSON.stringify(response.accessToken));
     } catch (error) {
       runInAction(() => {
         this.error = (error as Error).message;
       });
     }
+  }
+
+  checkIsNewUser(email: string) {
+    return this.rootStore.userStore.users.find((item) => item.email === email);
+  }
+
+  setUser(user: User) {
+    runInAction(() => {
+      this.user = user;
+      this.isAuthenticated = true;
+    });
+
+    localStorage.setItem("user", JSON.stringify(user));
   }
 
   async addUser(user: User) {
@@ -89,23 +103,7 @@ export class UserStore {
     }
   }
 
-  checkIsNewUser(email: string) {
-    return this.rootStore.userStore.users.find((item) => item.email === email);
-  }
-
-  setUser(user: User) {
-    this.isUserFetching = true;
-    runInAction(() => {
-      this.user = user;
-      this.isAuthenticated = true;
-      this.isUserFetching = false;
-    });
-
-    localStorage.setItem("user", JSON.stringify(user));
-  }
-
   async getUserPhoto() {
-    this.isUserFetching = true;
     try {
       const headers = new Headers({
         Authorization: `Bearer ${this.rootStore.userStore.accessToken}`,
@@ -121,7 +119,6 @@ export class UserStore {
         const blob = await response.blob();
         runInAction(() => {
           this.userPhoto = URL.createObjectURL(blob);
-          this.isUserFetching = false;
         });
       }
     } catch (error) {
@@ -136,11 +133,9 @@ export class UserStore {
       const savedUser = localStorage.getItem("user");
       const accessToken = localStorage.getItem("accessToken");
       if (savedUser) {
-        this.isUserFetching = true;
         runInAction(() => {
           this.user = JSON.parse(savedUser);
           this.isAuthenticated = true;
-          this.isUserFetching = false;
         });
       }
       if (accessToken) {
@@ -158,5 +153,6 @@ export class UserStore {
     });
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("account");
   }
 }

@@ -2,12 +2,14 @@
 
 import { FC, useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
-import { rootStore } from "@/stores/root-store";
+import { useRootStore } from "@/hooks/useStore";
 import { Workout } from "@/models";
 import { calculatePace, getObjectDifferences } from "@/utils/values";
 
 const initialValues: Workout = {
+  typeWorkout: undefined,
   dateWorkout: undefined,
+  timeWorkout: "00:00",
   distance: undefined,
   duration: undefined,
   pace: undefined,
@@ -20,6 +22,7 @@ interface WorkoutModalProps {
 
 const WorkoutModal: FC<WorkoutModalProps> = observer(
   ({ setIsWorkoutModalShow, workout }) => {
+    const { workoutStore } = useRootStore();
     const date =
       workout && workout.dateWorkout
         ? new Date(workout.dateWorkout).toISOString().split("T")[0]
@@ -41,10 +44,10 @@ const WorkoutModal: FC<WorkoutModalProps> = observer(
 
     const onAccept = useCallback(() => {
       if (newWorkout && !workout) {
-        rootStore.workoutStore.addWorkout(newWorkout);
+        workoutStore.addWorkout(newWorkout);
         setIsWorkoutModalShow(false);
       } else if (workout) {
-        rootStore.workoutStore.updateWorkout(
+        workoutStore.updateWorkout(
           getObjectDifferences(workout, newWorkout),
           workout.objectId
         );
@@ -69,16 +72,31 @@ const WorkoutModal: FC<WorkoutModalProps> = observer(
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div className="w-[80vw] p-4 bg-table rounded-lg">
-          <h1 className="text-xl font-bold tracking-[1.25px]">{`${workout ? "Update" : "Add"} workout`}</h1>
-          <div className="pt-2 pb-8">Please fill fields:</div>
+          <h1 className="text-2xl font-bold tracking-[1.25px]">{`${workout ? "Update" : "Add"} workout`}</h1>
+          <div className="text-base tracking-[1.25px] pt-2 pb-8">
+            Please fill fields:
+          </div>
           <form className="mb-10">
-            <div className="flex items-end gap-6 mb-4">
-              <div className="w-[50%]">
-                <label htmlFor="date" className="pb-2 block text-reg">
+            <div className="mb-4">
+              <label htmlFor="typeWorkout" className="pb-2 block text-sm">
+                Type (optional)
+              </label>
+              <input
+                className="w-full px-3 py-2 mt-1 text-primary border border-secondary rounded-md focus:outline-none"
+                id="typeWorkout"
+                value={newWorkout.typeWorkout}
+                onChange={(e) =>
+                  handleChangeValue("typeWorkout", e.target.value)
+                }
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-6 mb-4">
+              <div>
+                <label htmlFor="date" className="pb-2 block text-sm">
                   Date
                 </label>
                 <input
-                  className="w-full px-3 py-2 mt-1 text-primary border border-secondary rounded-md focus:outline-none"
+                  className="w-full px-2 py-2 mt-1 text-primary border border-secondary rounded-md focus:outline-none"
                   type="date"
                   id="date"
                   value={newWorkout.dateWorkout}
@@ -88,8 +106,25 @@ const WorkoutModal: FC<WorkoutModalProps> = observer(
                 />
               </div>
 
+              <div className="">
+                <label htmlFor="time" className="pb-2 block text-sm">
+                  Time (optional)
+                </label>
+                <input
+                  className="w-full px-3 py-2 mt-1 text-primary border border-secondary rounded-md focus:outline-none"
+                  type="time"
+                  id="time"
+                  value={newWorkout.timeWorkout}
+                  onChange={(e) =>
+                    handleChangeValue("timeWorkout", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 mb-4">
               <div>
-                <label htmlFor="distance" className="pb-2 block text-reg">
+                <label htmlFor="distance" className="pb-2 block text-sm">
                   Distance
                 </label>
                 <input
@@ -102,11 +137,9 @@ const WorkoutModal: FC<WorkoutModalProps> = observer(
                   }
                 />
               </div>
-            </div>
 
-            <div className="flex gap-6">
-              <div className="w-[50%]">
-                <label htmlFor="duration" className="pb-2 block text-reg">
+              <div>
+                <label htmlFor="duration" className="pb-2 block text-sm">
                   Duration
                 </label>
                 <input
@@ -119,16 +152,15 @@ const WorkoutModal: FC<WorkoutModalProps> = observer(
                   }
                 />
               </div>
-
-              <div>
-                <label className="pb-2 block text-reg">Pace</label>
-                <input
-                  className="w-full px-3 py-2 mt-1 text-primary border border-secondary rounded-md focus:outline-none"
-                  placeholder="Pace"
-                  value={newWorkout.pace}
-                  disabled
-                />
-              </div>
+            </div>
+            <div>
+              <label className="pb-2 block text-sm">Pace</label>
+              <input
+                className="w-full px-3 py-2 mt-1 text-primary border border-secondary rounded-md focus:outline-none"
+                placeholder="Pace"
+                value={newWorkout.pace}
+                disabled
+              />
             </div>
           </form>
           <button

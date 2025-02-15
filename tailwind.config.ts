@@ -16,6 +16,9 @@ export default {
         red: "#d81b60",
         table: "#505254",
       },
+      gridTemplateColumns: {
+        table: "1.5fr 1fr 1fr 1fr 1fr",
+      },
     },
   },
   plugins: [],

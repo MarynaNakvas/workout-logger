@@ -2,7 +2,7 @@
 
 import { FC, useCallback } from "react";
 import { observer } from "mobx-react-lite";
-import { rootStore } from "@/stores/root-store";
+import { useRootStore } from "@/hooks/useStore";
 
 interface ConfirmModalProps {
   setIsConfirmModalShow: (prop: boolean) => void;
@@ -11,9 +11,10 @@ interface ConfirmModalProps {
 
 const ConfirmModal: FC<ConfirmModalProps> = observer(
   ({ setIsConfirmModalShow, workoutId }) => {
+    const { workoutStore } = useRootStore();
     const onAccept = useCallback(() => {
       if (workoutId) {
-        rootStore.workoutStore.deleteWorkout(workoutId);
+        workoutStore.deleteWorkout(workoutId);
         setIsConfirmModalShow(false);
       }
     }, [workoutId]);
@@ -32,13 +33,13 @@ const ConfirmModal: FC<ConfirmModalProps> = observer(
             Are you sure you want to delete this workout?
           </div>
           <button
-            className="mr-6 px-8 py-3 text-button text-primary bg-secondary rounded-full"
+            className="mr-4 px-6 py-3 text-button text-primary bg-secondary rounded-full"
             onClick={onAccept}
           >
             Confirm
           </button>
           <button
-            className="px-8 py-3 text-button text-primary bg-secondary rounded-full"
+            className="px-6 py-3 text-button text-primary bg-secondary rounded-full"
             onClick={onCancel}
           >
             Cancel
