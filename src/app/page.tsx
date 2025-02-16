@@ -17,7 +17,7 @@ const Home: FC = observer(() => {
     } else {
       router.push("/sign-in");
     }
-  }, []);
+  }, [userStore.isAuthenticated]);
 
   return (
     <div className="h-screen flex items-center">

@@ -155,6 +155,6 @@ export class UserStore {
     });
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("account");
+    // localStorage.removeItem("account");
   }
 }

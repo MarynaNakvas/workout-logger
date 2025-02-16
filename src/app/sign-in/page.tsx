@@ -26,7 +26,7 @@ const initialState: FormInitialValues = {
 };
 
 const SignIn: FC = observer(() => {
-  const { instance } = useMsal();
+  const { instance, accounts } = useMsal();
   const router = useRouter();
   const { userStore } = useRootStore();
 
@@ -87,22 +87,48 @@ const SignIn: FC = observer(() => {
 
   const handleSignInWithMicrosoft = () => {
     instance.loginRedirect(loginRequest);
-    localStorage.setItem("account", "true");
+    // localStorage.setItem("account", "true");
   };
 
-  const account = localStorage.getItem("account");
+  const fetchToken = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      await userStore.getAccessToken(instance, accounts[0]);
+    }
+  };
 
   useEffect(() => {
-    if (userStore.accessToken) {
+    if (accounts.length > 0) {
+      fetchToken();
+      const storagedUser = localStorage.getItem("user");
+      const userData = userStore.checkIsNewUser(accounts[0].username);
+
+      const currentUser = {
+        email: accounts[0].username,
+        name: accounts[0].name,
+      } as User;
+
+      !!storagedUser
+        ? userStore.setUser(JSON.parse(storagedUser))
+        : userData
+          ? userStore.setUser(userData)
+          : userStore.addUser(currentUser);
+    }
+  }, [accounts]);
+
+  // const account = localStorage.getItem("account");
+
+  useEffect(() => {
+    if (userStore.isAuthenticated) {
       router.push("/dashboard");
     }
-  }, [userStore.accessToken]);
+  }, [userStore.isAuthenticated]);
 
-  useEffect(() => {
-    if (!!account) {
-      router.push("/account");
-    }
-  }, [account]);
+  // useEffect(() => {
+  //   if (!!account) {
+  //     router.push("/account");
+  //   }
+  // }, [account]);
 
   useEffect(() => {
     userStore.fetchUsers();
@@ -111,7 +137,7 @@ const SignIn: FC = observer(() => {
 
   return (
     <div className="h-screen bg-primary text-text flex items-center justify-center">
-      <Spinner isLoading={!!account && !userStore.accessToken}>
+      <Spinner isLoading={userStore.isUserFetching}>
         <div className="w-full min-h-screen p-8 bg-gray-800 rounded-xl shadow-md">
           <h2 className="text-3xl font-bold text-center">Workout Logger</h2>
 
