@@ -87,7 +87,6 @@ const SignIn: FC = observer(() => {
 
   const handleSignInWithMicrosoft = () => {
     instance.loginRedirect(loginRequest);
-    // localStorage.setItem("account", "true");
   };
 
   const fetchToken = async () => {
@@ -116,19 +115,11 @@ const SignIn: FC = observer(() => {
     }
   }, [accounts]);
 
-  // const account = localStorage.getItem("account");
-
   useEffect(() => {
     if (userStore.isAuthenticated) {
       router.push("/dashboard");
     }
   }, [userStore.isAuthenticated]);
-
-  // useEffect(() => {
-  //   if (!!account) {
-  //     router.push("/account");
-  //   }
-  // }, [account]);
 
   useEffect(() => {
     userStore.fetchUsers();

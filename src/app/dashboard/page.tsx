@@ -15,10 +15,6 @@ const Dashboard: FC = observer(() => {
   const [workoutId, setWorkoutId] = useState<string | undefined>(undefined);
   const [workout, setWorkout] = useState<Workout | undefined>(undefined);
 
-  // if (typeof window !== "undefined") {
-  //   localStorage.removeItem("account");
-  // }
-
   return (
     <>
       <div className="px-8 py-8">

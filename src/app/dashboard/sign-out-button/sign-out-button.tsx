@@ -21,7 +21,6 @@ const SignOutButton = observer(() => {
       });
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
-      // localStorage.removeItem("account");
     } else {
       userStore.logout();
       router.push("/");

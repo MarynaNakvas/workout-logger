@@ -4,8 +4,8 @@ export const msalConfig = {
   auth: {
     clientId: "8c1d7425-37fe-4e0e-b19e-7557e4df414e",
     authority: "https://login.microsoftonline.com/common",
-    // redirectUri: "http://localhost:3000",
-    redirectUri: "https://workout-logger-v1.vercel.app",
+    redirectUri: "http://localhost:3000",
+    // redirectUri: "https://workout-logger-v1.vercel.app",
   },
   cache: {
     cacheLocation: "sessionStorage",
