@@ -90,8 +90,7 @@ const SignIn: FC = observer(() => {
     localStorage.setItem("account", "true");
   };
 
-  const account =
-    typeof window !== "undefined" ? localStorage.getItem("account") : true;
+  const account = localStorage.getItem("account");
 
   useEffect(() => {
     if (userStore.accessToken) {
