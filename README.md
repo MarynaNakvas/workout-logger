@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Workout Logger
 
-## Getting Started
+#### Web application for logging and tracking workouts
 
-First, run the development server:
+## Installation
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+To run the app locally, follow these steps:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- clone this repo [by link](https://github.com/MarynaNakvas/workout-logger)
+- run `npm install` to install dependencies
+- run `npm run dev` to run the development server
+- use the app at `http://localhost:3000`
+- run `npm run build` to build the project for production
+- run `npm run start` to run production app version
+- run `npm run lint` to run ESLint for linting
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Workout Logger allows users to log and track their workouts with the following key features:
 
-## Learn More
+- User authentication via email/password or Microsoft Entra single sign-on.
+- The ability to create, edit, and delete workout entries.
+- Record workout details like type, duration, distance.
+- Integration with Microsoft Graph API: showing a user photo from the Microsoft account and save workouts to a calendar.
 
-To learn more about Next.js, take a look at the following resources:
+## Tech
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application was built using the following technologies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js](https://nextjs.org/) - A React framework.
+- [TypeScript](https://www.typescriptlang.org/) - Strongly typed programming language that builds on JavaScript.
+- [MobX](https://mobx.js.org/README.html) - A state management library for managing global and local state.
+- [Microsoft Entra ID](https://entra.microsoft.com/) - A cloud-based identity and access management service.
+- [Microsoft Graph API](https://developer.microsoft.com/en-us/graph) - A unified API that allows access to Microsoft 365 services and data.
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework for styling the app.
