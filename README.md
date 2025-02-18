@@ -33,3 +33,4 @@ The application was built using the following technologies:
 - [Microsoft Entra ID](https://entra.microsoft.com/) - A cloud-based identity and access management service.
 - [Microsoft Graph API](https://developer.microsoft.com/en-us/graph) - A unified API that allows access to Microsoft 365 services and data.
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework for styling the app.
+- [Backendless](https://backendless.com/) - A Backend-as-a-Service (BaaS) platform that provides cloud-based services (Real-time Database).
